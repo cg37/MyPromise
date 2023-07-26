@@ -29,4 +29,30 @@ class MyPromise {
       reject(e)
     }
   }
+
+  then(onResolved, onRejected) {
+    if (typeof onResolved === 'function') {
+      this.resolvedCallbacks.push(onResolved)
+    }
+
+    if (typeof onRejected === 'function') {
+      this.rejectedCallbacks.push(onRejected)
+    }
+  }
+  catch(onRejected) {
+    return this.then(null, onRejected)
+  }
 }
+
+let p = new Promise((resolve, reject) => {
+  let xhr = new XMLHttpRequest()
+  xhr.open('get', catsUrl)
+  xhr.onload = () => {
+    resolve(xhr.responseText)
+  }
+  xhr.onerror = (e) => {
+    reject(new Error(String(e)))
+  }
+  xhr.send()
+})
+
